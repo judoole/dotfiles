@@ -17,6 +17,8 @@
 [core]
         excludesfile = ~/.gitignore
         editor = vim
+	precomposeunicode = false
+	quotepath = false
 [apply]
         whitespace = nowarn
 [mergetool]
