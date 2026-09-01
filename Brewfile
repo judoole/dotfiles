@@ -38,16 +38,7 @@ brew "mise"
 brew "uv"               # Python packaging and venvs
 brew "go"
 
-# ----------------------------------------------------------- cloud & infra
-brew "terraform"
-brew "kubernetes-cli"   # kubectl
-brew "helm"
-brew "colima"           # container runtime — no Docker Desktop licence needed
-brew "docker"
-brew "docker-compose"
-
 # ------------------------------------------------------------------- data
-brew "postgresql@16"
 brew "go-parquet-tools"
 
 # ------------------------------------------------------------------ other
@@ -96,12 +87,17 @@ cask "font-jetbrains-mono"
 #   pyenv, rbenv, virtualenv, nvm, sdkman   all replaced by mise
 #   node, yarn                              mise installs node; corepack gives yarn
 #   ack                                     replaced by ripgrep
-#   postgresql@14                           superseded by @16
 #   libgit2, spaceman-diff, mvnvm, roundup  unused in years of shell history
 #   minikube, jupyterlab, spark, tcl-tk     installed but absent from recent use;
 #                                           add back if you miss them
 #   black, flake8                           better as per-project uv deps than
 #                                           global installs (consider ruff)
 #
-# Cloud vendor CLIs are left out until this machine's work is known. Add back
-# with `brew install --cask gcloud-cli` or `brew install awscli` if needed.
+# Left out until the new machine's work is known. Add back when needed:
+#
+#   cloud CLIs      brew install --cask gcloud-cli
+#                   brew install awscli
+#   containers      brew install colima docker docker-compose
+#   orchestration   brew install kubernetes-cli helm
+#   iac             brew install terraform
+#   databases       brew install postgresql@16   (or libpq for client only)

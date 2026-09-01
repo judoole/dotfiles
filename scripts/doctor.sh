@@ -12,7 +12,7 @@ realpath_of() { python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))'
 
 echo 'commands on PATH'
 for c in brew stow mise starship atuin zoxide fzf eza bat fd rg \
-         git gh delta jq yq uv go kubectl helm terraform docker colima; do
+         git gh delta jq yq uv go; do
   if command -v "$c" >/dev/null; then ok "$c"; else bad "$c is missing"; fi
 done
 
@@ -76,6 +76,15 @@ echo
 echo 'carried over by hand (see MIGRATION.md)'
 if [[ -d "$HOME/.ssh" ]]; then ok 'ssh keys present'
 else warn 'ssh directory absent — see MIGRATION.md'; fi
+if [[ -d "$HOME/Code/autodesk" ]]; then
+  if [[ -r "$HOME/.gitconfig.work" ]]; then
+    email=$(git -C "$HOME/Code/autodesk" config user.email 2>/dev/null \
+            || git config -f "$HOME/.gitconfig.work" user.email 2>/dev/null)
+    ok "work identity configured (${email:-set})"
+  else
+    warn 'work repos exist but ~/.gitconfig.work is missing — commits will use your personal email'
+  fi
+fi
 if gh auth status >/dev/null 2>&1; then ok 'gh authenticated'
 else warn 'gh not authenticated: gh auth login'; fi
 

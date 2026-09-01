@@ -1,0 +1,15 @@
+# Copy to ~/.gitconfig.work on the Autodesk machine. Never commit the real one.
+#
+#   cp git/gitconfig.work.example ~/.gitconfig.work
+#
+# Applies to every repo under ~/Code/autodesk/ (see the includeIf in .gitconfig).
+
+[user]
+	name = Ole Christian Langfjæran
+	email = first.last@autodesk.com
+
+# If Autodesk requires signed commits, add the signing key here too:
+# [user]
+# 	signingkey = <key id>
+# [commit]
+# 	gpgsign = true

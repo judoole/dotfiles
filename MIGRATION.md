@@ -17,7 +17,8 @@ them belong in a git repo.
 | `~/.ssh/` | Private keys. Copy the directory, keep mode `700`, keys `600`. |
 | `~/.gnupg/` | GPG keys, if you sign commits. |
 | `~/.localrc` | Machine-local shell config and secrets, sourced last by `.zshrc`. Does not exist yet; create it if you need one. |
-| `~/.gitconfig.local` | Optional per-machine git overrides (e.g. a work email). |
+| `~/.gitconfig.local` | Optional per-machine git overrides. |
+| `~/.gitconfig.work` | Autodesk git identity. Create from `git/gitconfig.work.example`; never versioned. |
 | `~/.codex/.env` | Holds a live API key. |
 | iTerm2 profile | iTerm2 → Settings → Profiles → Other Actions → Save as JSON. |
 
@@ -40,11 +41,22 @@ cd ~/.dotfiles && make bootstrap
 
 Open a new shell, then `make doctor`.
 
+### On the Autodesk machine
+
+Same clone, same `make bootstrap`. The only extra step is the work identity:
+
+```bash
+cp git/gitconfig.work.example ~/.gitconfig.work
+$EDITOR ~/.gitconfig.work        # fill in the Autodesk address
+```
+
+Everything under `~/Code/autodesk/` then commits with that identity, and
+everything else stays personal. `make doctor` warns if you forget.
+
 ## 3. Re-authenticate (no copying needed)
 
 ```bash
 gh auth login
-docker login
 ```
 
 Sign in to Codex, Claude, Cursor and Dropbox through their apps.

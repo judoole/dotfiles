@@ -30,10 +30,6 @@ alias gds='git diff --staged'
 alias glog="git log --graph --abbrev-commit --date=relative \
 --pretty=format:'%Cred%h%Creset %an: %s -%C(yellow)%d%Creset %Cgreen(%cr)%Creset'"
 
-# --- infra -----------------------------------------------------------------
-alias tf='terraform'
-alias k='kubectl'
-
 # --- misc ------------------------------------------------------------------
 alias m='make'
 alias reload='exec zsh'

@@ -74,7 +74,25 @@
 	# Branches you have merged and can safely delete.
 	gone = "!git fetch -p && git branch -vv | awk '/: gone]/{print $1}'"
 
-# Machine-specific overrides (work email, extra safe.directory entries).
-# Never versioned. Kept last so it wins.
+# --- identity layering ------------------------------------------------------
+# Git applies includes in order and the last value wins, so these run from
+# least to most specific:
+#
+#   1. the [user] block above          personal default, safe to publish
+#   2. ~/.gitconfig.local              per-machine overrides, never versioned
+#   3. ~/.gitconfig.work               work identity, never versioned
+#
+# The work identity is selected by where the repo lives, not by which machine
+# you are on. That means a personal side project cloned onto the Autodesk Mac
+# still commits as you, and the same versioned config is correct on every
+# machine with no per-machine edit.
+#
+# On the work machine, copy git/gitconfig.work.example to ~/.gitconfig.work
+# and fill in the Autodesk address. It is deliberately not in this repo — the
+# repo is public.
+
 [include]
 	path = ~/.gitconfig.local
+
+[includeIf "gitdir:~/Code/autodesk/"]
+	path = ~/.gitconfig.work

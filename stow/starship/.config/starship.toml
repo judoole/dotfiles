@@ -2,7 +2,7 @@
 # any terminal, including a brand-new Mac before fonts are installed.
 
 format = """
-$directory$git_branch$git_state$git_status$kubernetes$java$python$nodejs$cmd_duration
+$directory$git_branch$git_state$git_status$java$python$nodejs$cmd_duration
 $character"""
 
 add_newline = false
@@ -24,11 +24,6 @@ style = "bold green"
 [git_status]
 format = "([$all_status$ahead_behind]($style)) "
 style = "bold yellow"
-
-[kubernetes]
-format = "[k8s:$context]($style) "
-style = "bold blue"
-disabled = false
 
 [java]
 format = "[java $version]($style) "

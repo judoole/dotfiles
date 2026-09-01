@@ -60,10 +60,11 @@ becomes `~/.zshrc`. Real dotted filenames are used rather than stow's
 
 ## Design notes
 
-**Why stow and not chezmoi or nix.** Templating and encryption earn their
-keep across many heterogeneous machines. For two arm64 Macs configured
-identically they are cost without benefit. This is ~150 lines you can read in
-one sitting, and `make unlink` reverses all of it.
+**Why stow and not chezmoi or nix.** The one thing that genuinely differs
+between machines is git identity, and git solves that itself with
+`includeIf` (see below). That removes the main reason to reach for a
+templating layer. What is left is ~150 lines you can read in one sitting, and
+`make unlink` reverses all of it.
 
 **One version manager.** `mise` replaces sdkman + nvm + pyenv + rbenv + jenv,
 which previously all loaded shims on every prompt. Per-project `mise.toml`,
@@ -77,6 +78,23 @@ naming.
 
 **The shell config does not know where this repo lives.** Nothing sources a
 file from `$DOTFILES`, so the repo can be cloned anywhere.
+
+**Same repo on every machine, including work.** Personal and Autodesk
+machines run identical versioned config. Git identity is chosen by *where the
+repo lives*, not which machine you are on:
+
+| Repo location | Commits as |
+|---|---|
+| `~/Code/autodesk/**` | Autodesk address, from `~/.gitconfig.work` |
+| anywhere else | personal address, from the versioned `.gitconfig` |
+
+On the work machine, `cp git/gitconfig.work.example ~/.gitconfig.work` and
+fill in the address. That file is never versioned — this repo is public. A
+personal side project cloned onto the work Mac still commits as you, and
+`make doctor` warns if work repos exist without the work identity set.
+
+`~/.gitconfig.local` sits between the two for anything else a single machine
+needs.
 
 **Nothing secret is committed.** `~/.localrc` is sourced last by `.zshrc` and
 is never versioned. See MIGRATION.md.
