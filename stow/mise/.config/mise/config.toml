@@ -1,0 +1,26 @@
+# Global runtime versions. Replaces sdkman + nvm + pyenv + rbenv + jenv.
+#
+# These are the fallbacks used outside a project. Any repo with its own
+# mise.toml / .tool-versions / .java-version overrides them automatically,
+# so per-project pinning keeps working without extra tooling.
+#
+#   mise use -g java@temurin-21    change the global default
+#   mise ls                        what is installed and active
+#   mise outdated                  what has newer releases
+
+[tools]
+# First entry is the default; the rest stay installed and selectable.
+java   = ["temurin-21", "temurin-17"]
+maven  = "latest"
+gradle = "latest"
+node   = "lts"
+# uv manages per-project Python envs; this is just the interpreter for
+# one-off scripts and `python3` outside a project.
+python = "3.12"
+ruby   = "3.3"
+
+[settings]
+# Warn instead of silently ignoring an unknown tool in a project config.
+experimental = true
+# Trust config files under your own home directory without prompting.
+idiomatic_version_file_enable_tools = ["java", "node", "python", "ruby"]

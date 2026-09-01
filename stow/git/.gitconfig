@@ -1,0 +1,80 @@
+[user]
+	name = Ole Christian Langfjæran
+	email = judoole@gmail.com
+
+[init]
+	defaultBranch = main
+
+[core]
+	excludesfile = ~/.config/git/ignore
+	editor = vim
+	pager = delta
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true
+	line-numbers = true
+	hyperlinks = true
+
+[diff]
+	algorithm = histogram
+	colorMoved = default
+	renames = true
+
+[merge]
+	conflictstyle = zdiff3
+	tool = vimdiff
+[mergetool]
+	keepBackup = false
+[difftool]
+	prompt = false
+
+[push]
+	default = simple
+	autoSetupRemote = true
+	followTags = true
+[pull]
+	ff = only
+[fetch]
+	prune = true
+	pruneTags = true
+
+[rebase]
+	autosquash = true
+	autostash = true
+[rerere]
+	enabled = true
+	autoupdate = true
+
+[branch]
+	sort = -committerdate
+[tag]
+	sort = -version:refname
+[column]
+	ui = auto
+
+[help]
+	autocorrect = 1
+[credential]
+	helper = osxkeychain
+[color]
+	ui = true
+
+[alias]
+	co = checkout
+	sw = switch
+	st = status -sb
+	count = !git shortlog -sn
+	last = log -1 HEAD --stat
+	unstage = restore --staged
+	amend = commit --amend --no-edit
+	graph = log --graph --oneline --decorate --all
+	# Branches you have merged and can safely delete.
+	gone = "!git fetch -p && git branch -vv | awk '/: gone]/{print $1}'"
+
+# Machine-specific overrides (work email, extra safe.directory entries).
+# Never versioned. Kept last so it wins.
+[include]
+	path = ~/.gitconfig.local

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Help Me Finish GitHub Issue"
+  short_description: "Finish a GitHub issue in a fresh Codex worktree"
+  default_prompt: "Use $help-me-finish-github-issue to start from the latest origin default branch and implement a GitHub issue end to end."

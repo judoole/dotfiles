@@ -1,0 +1,46 @@
+# Deliberately no Nerd Font glyphs — plain text symbols render correctly in
+# any terminal, including a brand-new Mac before fonts are installed.
+
+format = """
+$directory$git_branch$git_state$git_status$kubernetes$java$python$nodejs$cmd_duration
+$character"""
+
+add_newline = false
+command_timeout = 1000
+
+[directory]
+truncation_length = 3
+truncate_to_repo = true
+style = "bold cyan"
+
+[character]
+success_symbol = "[%](bold green)"
+error_symbol = "[%](bold red)"
+
+[git_branch]
+format = "[$branch]($style) "
+style = "bold green"
+
+[git_status]
+format = "([$all_status$ahead_behind]($style)) "
+style = "bold yellow"
+
+[kubernetes]
+format = "[k8s:$context]($style) "
+style = "bold blue"
+disabled = false
+
+[java]
+format = "[java $version]($style) "
+style = "red"
+[python]
+format = "[py $version]($style) "
+style = "yellow"
+[nodejs]
+format = "[node $version]($style) "
+style = "green"
+
+[cmd_duration]
+min_time = 2000
+format = "[took $duration]($style) "
+style = "dimmed white"
