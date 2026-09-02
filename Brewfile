@@ -7,6 +7,10 @@
 # machine had 51 installed — which is how a dotfiles repo quietly stops being
 # something you can trust to rebuild a laptop.
 
+# HashiCorp relicensed to BUSL, so their tools were removed from homebrew-core
+# and now live in their own tap.
+tap "hashicorp/tap"
+
 # ------------------------------------------------------------ shell & CLI
 brew "coreutils"        # gls/gdate/etc — GNU behaviour on macOS
 brew "stow"             # symlink manager behind `make link`
@@ -37,6 +41,10 @@ brew "gnupg"            # commit signing
 brew "mise"
 brew "uv"               # Python packaging and venvs
 brew "go"
+
+# --------------------------------------------------------- cloud & secrets
+brew "awscli"
+brew "hashicorp/tap/vault"
 
 # ------------------------------------------------------------------- data
 brew "go-parquet-tools"
@@ -99,9 +107,10 @@ cask "font-jetbrains-mono"
 #
 # Left out until the new machine's work is known. Add back when needed:
 #
-#   cloud CLIs      brew install --cask gcloud-cli
-#                   brew install awscli
+#   gcloud          brew install --cask gcloud-cli
 #   containers      brew install colima docker docker-compose
 #   orchestration   brew install kubernetes-cli helm
-#   iac             brew install terraform
+#   iac             brew install hashicorp/tap/terraform
+#                   (NOT `brew install terraform` — homebrew-core is frozen at
+#                    1.5.7, the last release before the BUSL relicence)
 #   databases       brew install postgresql@16   (or libpq for client only)

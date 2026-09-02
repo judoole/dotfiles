@@ -12,7 +12,7 @@ realpath_of() { python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))'
 
 echo 'commands on PATH'
 for c in brew stow mise starship atuin zoxide fzf eza bat fd rg \
-         git gh delta jq yq uv go; do
+         git gh delta jq yq uv go aws vault; do
   if command -v "$c" >/dev/null; then ok "$c"; else bad "$c is missing"; fi
 done
 
