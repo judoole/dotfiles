@@ -17,7 +17,7 @@ them belong in a git repo.
 | `~/.ssh/` | Private keys. Copy the directory, keep mode `700`, keys `600`. |
 | `~/.gnupg/` | GPG keys, if you sign commits. |
 | `~/.localrc` | Machine-local shell config and secrets, sourced last by `.zshrc`. Does not exist yet; create it if you need one. |
-| `~/.gitconfig.local` | Optional per-machine git overrides. |
+| `~/.gitconfig.local` | **Required.** Your git identity. Create with `make identity`; git refuses to commit without it. |
 | `~/.gitconfig.work` | Autodesk git identity. Create from `git/gitconfig.work.example`; never versioned. |
 | `~/.codex/.env` | Holds a live API key. |
 | iTerm2 profile | iTerm2 → Settings → Profiles → Other Actions → Save as JSON. |
@@ -39,13 +39,17 @@ git clone https://github.com/judoole/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles && make bootstrap
 ```
 
-Open a new shell, then `make doctor`.
+Open a new shell, then `make identity`, edit `~/.gitconfig.local`, and run
+`make doctor`.
 
 ### On the Autodesk machine
 
 Same clone, same `make bootstrap`. The only extra step is the work identity:
 
 ```bash
+make identity                    # creates ~/.gitconfig.local
+$EDITOR ~/.gitconfig.local       # uncomment and fill in your personal identity
+
 cp git/gitconfig.work.example ~/.gitconfig.work
 $EDITOR ~/.gitconfig.work        # fill in the Autodesk address
 ```

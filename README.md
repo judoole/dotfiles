@@ -31,6 +31,7 @@ not carry: SSH keys, GPG keys, and re-authentication.
 | `make bootstrap` | brew → link → mise → ai. The whole setup. |
 | `make brew` | Install everything in the `Brewfile` |
 | `make link` | Symlink `stow/*` into `$HOME` (backs up anything in the way) |
+| `make identity` | Create `~/.gitconfig.local` from the example |
 | `make unlink` | Remove every symlink this repo created |
 | `make mise` | Install the runtimes pinned in `mise/config.toml` |
 | `make ai` | Link agent skills into Claude / Codex / Cursor |
@@ -83,18 +84,24 @@ file from `$DOTFILES`, so the repo can be cloned anywhere.
 machines run identical versioned config. Git identity is chosen by *where the
 repo lives*, not which machine you are on:
 
-| Repo location | Commits as |
-|---|---|
-| `~/Code/autodesk/**` | Autodesk address, from `~/.gitconfig.work` |
-| anywhere else | personal address, from the versioned `.gitconfig` |
+| Repo location | Commits as | From |
+|---|---|---|
+| `~/Code/autodesk/**` | Autodesk address | `~/.gitconfig.work` |
+| anywhere else | personal address | `~/.gitconfig.local` |
 
-On the work machine, `cp git/gitconfig.work.example ~/.gitconfig.work` and
-fill in the address. That file is never versioned — this repo is public. A
-personal side project cloned onto the work Mac still commits as you, and
-`make doctor` warns if work repos exist without the work identity set.
+**No identity is committed to this repo.** It is public, so a versioned
+`[user]` block would mean anyone who cloned it committed as me until they
+noticed. Both identity files are created per machine from the examples in
+`git/`.
 
-`~/.gitconfig.local` sits between the two for anything else a single machine
-needs.
+The safeguard is `user.useConfigOnly = true`: with no identity configured git
+**refuses to commit** rather than inventing `judoole@<hostname>.local`. The
+example files ship with their values commented out for the same reason — a
+placeholder address that git would happily accept is worse than an error.
+`make doctor` fails on both a missing identity and a leftover placeholder.
+
+Selecting on repo location rather than hostname means a personal side project
+cloned onto the Autodesk Mac still commits as you.
 
 **Nothing secret is committed.** `~/.localrc` is sourced last by `.zshrc` and
 is never versioned. See MIGRATION.md.

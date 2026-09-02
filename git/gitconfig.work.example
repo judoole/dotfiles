@@ -2,13 +2,17 @@
 #
 #   cp git/gitconfig.work.example ~/.gitconfig.work
 #
-# Applies to every repo under ~/Code/autodesk/ (see the includeIf in .gitconfig).
+# Applies to every repo under ~/Code/autodesk/ (see the includeIf in
+# .gitconfig). Repos anywhere else use ~/.gitconfig.local instead.
+#
+# The lines below are COMMENTED ON PURPOSE, so that an unedited copy leaves
+# git refusing to commit rather than authoring with a placeholder address.
 
-[user]
-	name = Ole Christian Langfjæran
-	email = first.last@autodesk.com
+# [user]
+# 	name = Your Name
+# 	email = first.last@autodesk.com
 
-# If Autodesk requires signed commits, add the signing key here too:
+# If Autodesk requires signed commits:
 # [user]
 # 	signingkey = <key id>
 # [commit]

@@ -1,6 +1,11 @@
+# No identity here on purpose: this repo is public, and a versioned [user]
+# block means anyone who clones it commits as me until they notice.
+#
+# useConfigOnly makes git REFUSE to commit when no identity is configured,
+# instead of silently inventing judoole@<hostname>.local. That turns a
+# forgotten setup step into an immediate, obvious error.
 [user]
-	name = Ole Christian Langfjæran
-	email = judoole@gmail.com
+	useConfigOnly = true
 
 [init]
 	defaultBranch = main
@@ -78,18 +83,17 @@
 # Git applies includes in order and the last value wins, so these run from
 # least to most specific:
 #
-#   1. the [user] block above          personal default, safe to publish
-#   2. ~/.gitconfig.local              per-machine overrides, never versioned
-#   3. ~/.gitconfig.work               work identity, never versioned
+#   1. ~/.gitconfig.local              your identity, never versioned
+#   2. ~/.gitconfig.work               work identity, never versioned
+#
+# `make identity` creates ~/.gitconfig.local from git/gitconfig.local.example
+# on a new machine. Until you fill it in, git refuses to commit (see
+# user.useConfigOnly above) rather than guessing wrong.
 #
 # The work identity is selected by where the repo lives, not by which machine
-# you are on. That means a personal side project cloned onto the Autodesk Mac
-# still commits as you, and the same versioned config is correct on every
-# machine with no per-machine edit.
-#
-# On the work machine, copy git/gitconfig.work.example to ~/.gitconfig.work
-# and fill in the Autodesk address. It is deliberately not in this repo — the
-# repo is public.
+# you are on, so a personal side project cloned onto the Autodesk Mac still
+# commits as you. On that machine also copy git/gitconfig.work.example to
+# ~/.gitconfig.work.
 
 [include]
 	path = ~/.gitconfig.local

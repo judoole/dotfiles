@@ -10,13 +10,13 @@ STOW_DIR := $(DOTFILES)/stow
 TARGET   := $(HOME)
 
 .DEFAULT_GOAL := help
-.PHONY: help bootstrap brew link unlink ai mise doctor check dump
+.PHONY: help bootstrap brew link unlink identity ai mise doctor check dump
 
 help: ## Show this help
 	@grep -hE '^[a-z-]+:.*?## ' $(MAKEFILE_LIST) \
 	| awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}'
 
-bootstrap: brew link mise ai ## Full setup on a fresh Mac
+bootstrap: brew link identity mise ai ## Full setup on a fresh Mac
 	@echo ""
 	@echo "Bootstrap complete. Open a new shell, then:"
 	@echo "  make doctor      verify everything landed"
@@ -34,6 +34,15 @@ unlink: ## Remove every symlink this repo created
 	@for pkg in $$(ls $(STOW_DIR)); do \
 	  stow --dir=$(STOW_DIR) --target=$(TARGET) --no-folding --delete $$pkg && echo "unlinked $$pkg"; \
 	done
+
+identity: ## Create ~/.gitconfig.local from the example if it is missing
+	@if [ -f "$(HOME)/.gitconfig.local" ]; then \
+	  echo "~/.gitconfig.local already exists"; \
+	else \
+	  cp $(DOTFILES)/git/gitconfig.local.example "$(HOME)/.gitconfig.local"; \
+	  echo "created ~/.gitconfig.local — EDIT IT with your name and email"; \
+	  echo "git will refuse to commit until you do"; \
+	fi
 
 mise: ## Install the runtimes pinned in mise/config.toml
 	@command -v mise >/dev/null || { echo "mise not installed; run 'make brew'"; exit 1; }

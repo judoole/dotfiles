@@ -73,6 +73,22 @@ else
 fi
 
 echo
+echo 'git identity'
+# Not --global: that reads the literal file and does NOT follow [include],
+# so it would miss the identity in ~/.gitconfig.local. Run from $HOME so the
+# gitdir includeIf for work repos does not skew the default.
+git_email=$(git -C "$HOME" config user.email 2>/dev/null || true)
+git_name=$(git -C "$HOME" config user.name 2>/dev/null || true)
+case "$git_email" in
+  '')
+    bad 'no git identity — run "make identity", then edit ~/.gitconfig.local' ;;
+  *example.com|*'Your Name'*)
+    bad "git identity is still the placeholder ($git_email) — edit ~/.gitconfig.local" ;;
+  *)
+    ok "default: $git_name <$git_email>" ;;
+esac
+
+echo
 echo 'carried over by hand (see MIGRATION.md)'
 if [[ -d "$HOME/.ssh" ]]; then ok 'ssh keys present'
 else warn 'ssh directory absent — see MIGRATION.md'; fi
