@@ -50,6 +50,7 @@ stow/                 each subdir is a stow package mirrored into $HOME
   git/                .gitconfig, .config/git/ignore
   mise/               .config/mise/config.toml
   starship/           .config/starship.toml
+  ghostty/            .config/ghostty/config
 ai/skills/            canonical agent skills, symlinked into every AI tool
 ai/codex/             Codex preferences (reference only — see the file)
 scripts/              link.sh, link-ai.sh, doctor.sh
@@ -114,6 +115,18 @@ git config user.email you@example.com
 **Nothing secret is committed.** `~/.localrc` is sourced last by `.zshrc` and
 is never versioned. See MIGRATION.md.
 
-**Out of scope on purpose:** macOS `defaults` scripting, VS Code / Cursor
-settings, and terminal profiles. The old repo referenced a `macos/set-defaults.sh`
+**The terminal is versioned, the editor is not.** Ghostty keeps its config in
+a plain file, so it drops into `stow/` like anything else. iTerm2 stores
+settings in a plist that does not diff or merge, which is why terminal config
+was previously out of scope. Both are in the `Brewfile` — try Ghostty on the
+new machine and drop whichever loses.
+
+Note `macos-option-as-alt = true` in the Ghostty config: without it macOS
+eats the Option key to type `å`/`∂`/`ƒ` and the alt-word keybindings in
+`.config/zsh/options.zsh` never fire. Those bindings cover the escape
+sequences iTerm2, Ghostty, WezTerm and kitty each send, so word movement
+works whichever you settle on.
+
+**Out of scope on purpose:** macOS `defaults` scripting and VS Code / Cursor
+settings. The old repo referenced a `macos/set-defaults.sh`
 that did not exist, which is the kind of rot this rewrite is meant to avoid.

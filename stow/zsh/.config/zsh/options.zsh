@@ -39,7 +39,16 @@ zle -N down-line-or-beginning-search
 bindkey '^[[A' up-line-or-beginning-search
 bindkey '^[[B' down-line-or-beginning-search
 
-bindkey '^[^[[D' backward-word
-bindkey '^[^[[C' forward-word
+# Alt/ctrl + arrow for word movement. Terminals disagree on what they send,
+# so bind every common encoding rather than tying the config to one terminal:
+#   \e\e[D    iTerm2 with Option set to "Esc+"
+#   \e[1;3D   Ghostty, WezTerm, kitty (alt)
+#   \e[1;5D   ctrl+arrow
+bindkey '^[^[[D'  backward-word
+bindkey '^[^[[C'  forward-word
+bindkey '^[[1;3D' backward-word
+bindkey '^[[1;3C' forward-word
+bindkey '^[[1;5D' backward-word
+bindkey '^[[1;5C' forward-word
 bindkey '^[[3~'  delete-char
 bindkey '^?'     backward-delete-char

@@ -49,6 +49,10 @@ brew "oath-toolkit"     # oathtool — TOTP codes
 brew "vercel"
 
 # ------------------------------------------------------------------ casks
+# Two terminals on purpose: try ghostty on the new machine and drop whichever
+# loses. Ghostty's config is a plain file this repo can own; iTerm2's is a
+# plist that does not version.
+cask "ghostty"
 cask "iterm2"
 cask "visual-studio-code"
 cask "cursor"
