@@ -31,7 +31,7 @@ not carry: SSH keys, GPG keys, and re-authentication.
 | `make bootstrap` | brew → link → mise → ai. The whole setup. |
 | `make brew` | Install everything in the `Brewfile` |
 | `make link` | Symlink `stow/*` into `$HOME` (backs up anything in the way) |
-| `make identity` | Create `~/.gitconfig.local` from the example |
+| `make identity` | Create the git identity files and verify git can use them |
 | `make unlink` | Remove every symlink this repo created |
 | `make mise` | Install the runtimes pinned in `mise/config.toml` |
 | `make ai` | Link agent skills into Claude / Codex / Cursor |
@@ -94,11 +94,18 @@ repo lives*, not which machine you are on:
 noticed. Both identity files are created per machine from the examples in
 `git/`.
 
-The safeguard is `user.useConfigOnly = true`: with no identity configured git
-**refuses to commit** rather than inventing `judoole@<hostname>.local`. The
-example files ship with their values commented out for the same reason — a
-placeholder address that git would happily accept is worse than an error.
-`make doctor` fails on both a missing identity and a leftover placeholder.
+Three safeguards, because each catches a case the others cannot:
+
+1. `user.useConfigOnly = true` — with no identity configured git **refuses to
+   commit** rather than inventing `judoole@<hostname>.local`.
+2. Both example files ship with their values **commented out**, so an unedited
+   copy still trips the refusal. A placeholder address git would happily
+   accept is worse than an error.
+3. `make bootstrap` **ends** with an identity check, and `make doctor` repeats
+   it. This is the only thing that catches an unedited `~/.gitconfig.work`:
+   the `includeIf` then contributes nothing, work repos fall through to your
+   personal identity, and git has no reason to complain — a valid identity is
+   set, just the wrong one.
 
 Selecting on repo location rather than hostname means a personal side project
 cloned onto the Autodesk Mac still commits as you.

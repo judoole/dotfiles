@@ -74,33 +74,16 @@ fi
 
 echo
 echo 'git identity'
-# Not --global: that reads the literal file and does NOT follow [include],
-# so it would miss the identity in ~/.gitconfig.local. Run from $HOME so the
-# gitdir includeIf for work repos does not skew the default.
-git_email=$(git -C "$HOME" config user.email 2>/dev/null || true)
-git_name=$(git -C "$HOME" config user.name 2>/dev/null || true)
-case "$git_email" in
-  '')
-    bad 'no git identity — run "make identity", then edit ~/.gitconfig.local' ;;
-  *example.com|*'Your Name'*)
-    bad "git identity is still the placeholder ($git_email) — edit ~/.gitconfig.local" ;;
-  *)
-    ok "default: $git_name <$git_email>" ;;
-esac
+if "$DOTFILES/scripts/identity.sh" "$DOTFILES" --check; then
+  :
+else
+  fail=1
+fi
 
 echo
 echo 'carried over by hand (see MIGRATION.md)'
 if [[ -d "$HOME/.ssh" ]]; then ok 'ssh keys present'
 else warn 'ssh directory absent — see MIGRATION.md'; fi
-if [[ -d "$HOME/Code/autodesk" ]]; then
-  if [[ -r "$HOME/.gitconfig.work" ]]; then
-    email=$(git -C "$HOME/Code/autodesk" config user.email 2>/dev/null \
-            || git config -f "$HOME/.gitconfig.work" user.email 2>/dev/null)
-    ok "work identity configured (${email:-set})"
-  else
-    warn 'work repos exist but ~/.gitconfig.work is missing — commits will use your personal email'
-  fi
-fi
 if gh auth status >/dev/null 2>&1; then ok 'gh authenticated'
 else warn 'gh not authenticated: gh auth login'; fi
 

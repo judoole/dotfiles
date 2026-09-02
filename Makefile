@@ -21,6 +21,8 @@ bootstrap: brew link identity mise ai ## Full setup on a fresh Mac
 	@echo "Bootstrap complete. Open a new shell, then:"
 	@echo "  make doctor      verify everything landed"
 	@echo "  cat MIGRATION.md what still has to be moved by hand"
+	@echo ""
+	@$(DOTFILES)/scripts/identity.sh $(DOTFILES) --check || true
 
 brew: ## Install everything in the Brewfile
 	@command -v brew >/dev/null || { \
@@ -35,14 +37,8 @@ unlink: ## Remove every symlink this repo created
 	  stow --dir=$(STOW_DIR) --target=$(TARGET) --no-folding --delete $$pkg && echo "unlinked $$pkg"; \
 	done
 
-identity: ## Create ~/.gitconfig.local from the example if it is missing
-	@if [ -f "$(HOME)/.gitconfig.local" ]; then \
-	  echo "~/.gitconfig.local already exists"; \
-	else \
-	  cp $(DOTFILES)/git/gitconfig.local.example "$(HOME)/.gitconfig.local"; \
-	  echo "created ~/.gitconfig.local — EDIT IT with your name and email"; \
-	  echo "git will refuse to commit until you do"; \
-	fi
+identity: ## Create ~/.gitconfig.local (and .work) and verify git can use them
+	@$(DOTFILES)/scripts/identity.sh $(DOTFILES) --ensure || true
 
 mise: ## Install the runtimes pinned in mise/config.toml
 	@command -v mise >/dev/null || { echo "mise not installed; run 'make brew'"; exit 1; }
