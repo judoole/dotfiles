@@ -62,9 +62,9 @@ becomes `~/.zshrc`. Real dotted filenames are used rather than stow's
 ## Design notes
 
 **Why stow and not chezmoi or nix.** The one thing that genuinely differs
-between machines is git identity, and git solves that itself with
-`includeIf` (see below). That removes the main reason to reach for a
-templating layer. What is left is ~150 lines you can read in one sitting, and
+between machines is git identity, and that is one prompted file. With no
+divergence left to template, the main reason to reach for a templating layer
+goes away. What is left is ~150 lines you can read in one sitting, and
 `make unlink` reverses all of it.
 
 **One version manager.** `mise` replaces sdkman + nvm + pyenv + rbenv + jenv,
@@ -80,35 +80,36 @@ naming.
 **The shell config does not know where this repo lives.** Nothing sources a
 file from `$DOTFILES`, so the repo can be cloned anywhere.
 
-**Same repo on every machine, including work.** Personal and Autodesk
-machines run identical versioned config. Git identity is chosen by *where the
-repo lives*, not which machine you are on:
+**Same repo on every machine, work included.** Every machine runs identical
+versioned config. The only per-machine difference is git identity, and
+`make identity` asks for it:
 
-| Repo location | Commits as | From |
-|---|---|---|
-| `~/Code/autodesk/**` | Autodesk address | `~/.gitconfig.work` |
-| anywhere else | personal address | `~/.gitconfig.local` |
+```
+  full name: Ada Lovelace
+  email:     ada@example.com
+```
 
-**No identity is committed to this repo.** It is public, so a versioned
+That writes `~/.gitconfig.local`, which is never versioned. On a work machine
+you enter the work address, and that is the entire work setup — no directory
+conventions, no second config file.
+
+**No name or address is committed to this repo.** It is public, so a versioned
 `[user]` block would mean anyone who cloned it committed as me until they
-noticed. Both identity files are created per machine from the examples in
-`git/`.
+noticed.
 
-Three safeguards, because each catches a case the others cannot:
+Two safeguards, because the second catches what the first cannot:
 
 1. `user.useConfigOnly = true` — with no identity configured git **refuses to
    commit** rather than inventing `judoole@<hostname>.local`.
-2. Both example files ship with their values **commented out**, so an unedited
-   copy still trips the refusal. A placeholder address git would happily
-   accept is worse than an error.
-3. `make bootstrap` **ends** with an identity check, and `make doctor` repeats
-   it. This is the only thing that catches an unedited `~/.gitconfig.work`:
-   the `includeIf` then contributes nothing, work repos fall through to your
-   personal identity, and git has no reason to complain — a valid identity is
-   set, just the wrong one.
+2. `make bootstrap` ends with an identity check, and `make doctor` repeats it,
+   so a machine never sits quietly in that state.
 
-Selecting on repo location rather than hostname means a personal side project
-cloned onto the Autodesk Mac still commits as you.
+If you want a different address for a few repos on a machine, override per
+repo rather than reintroducing global rules:
+
+```bash
+git config user.email you@example.com
+```
 
 **Nothing secret is committed.** `~/.localrc` is sourced last by `.zshrc` and
 is never versioned. See MIGRATION.md.

@@ -17,8 +17,7 @@ them belong in a git repo.
 | `~/.ssh/` | Private keys. Copy the directory, keep mode `700`, keys `600`. |
 | `~/.gnupg/` | GPG keys, if you sign commits. |
 | `~/.localrc` | Machine-local shell config and secrets, sourced last by `.zshrc`. Does not exist yet; create it if you need one. |
-| `~/.gitconfig.local` | **Required.** Your git identity. Create with `make identity`; git refuses to commit without it. |
-| `~/.gitconfig.work` | Autodesk git identity. Create from `git/gitconfig.work.example`; never versioned. |
+| `~/.gitconfig.local` | Your git identity. Do **not** copy it — `make identity` prompts for it on each machine. Listed here only so you know it is not versioned. |
 | `~/.codex/.env` | Holds a live API key. |
 | iTerm2 profile | iTerm2 → Settings → Profiles → Other Actions → Save as JSON. |
 
@@ -39,23 +38,13 @@ git clone https://github.com/judoole/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles && make bootstrap
 ```
 
-Open a new shell, then `make identity`, edit `~/.gitconfig.local`, and run
-`make doctor`.
+`make bootstrap` prompts for your git name and email, and ends by confirming
+git can use them. Open a new shell, then run `make doctor`.
 
-### On the Autodesk machine
+### On a work machine
 
-Same clone, same `make bootstrap`. The only extra step is the work identity:
-
-```bash
-make identity                    # creates ~/.gitconfig.local
-$EDITOR ~/.gitconfig.local       # uncomment and fill in your personal identity
-
-cp git/gitconfig.work.example ~/.gitconfig.work
-$EDITOR ~/.gitconfig.work        # fill in the Autodesk address
-```
-
-Everything under `~/Code/autodesk/` then commits with that identity, and
-everything else stays personal. `make doctor` warns if you forget.
+Same clone, same `make bootstrap`. When it prompts for your identity, enter
+the work address. That is the whole difference.
 
 ## 3. Re-authenticate (no copying needed)
 

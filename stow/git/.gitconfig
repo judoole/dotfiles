@@ -79,24 +79,15 @@
 	# Branches you have merged and can safely delete.
 	gone = "!git fetch -p && git branch -vv | awk '/: gone]/{print $1}'"
 
-# --- identity layering ------------------------------------------------------
-# Git applies includes in order and the last value wins, so these run from
-# least to most specific:
+# --- identity ---------------------------------------------------------------
+# Your identity lives in ~/.gitconfig.local, which is created per machine by
+# `make identity` and is never versioned. This repo is public and carries no
+# name or address at all.
 #
-#   1. ~/.gitconfig.local              your identity, never versioned
-#   2. ~/.gitconfig.work               work identity, never versioned
+# On a work machine, enter the work address at the prompt. If you later want a
+# personal address for some repos on that machine, override per repo with:
 #
-# `make identity` creates ~/.gitconfig.local from git/gitconfig.local.example
-# on a new machine. Until you fill it in, git refuses to commit (see
-# user.useConfigOnly above) rather than guessing wrong.
+#   git config user.email you@example.com
 #
-# The work identity is selected by where the repo lives, not by which machine
-# you are on, so a personal side project cloned onto the Autodesk Mac still
-# commits as you. On that machine also copy git/gitconfig.work.example to
-# ~/.gitconfig.work.
-
 [include]
 	path = ~/.gitconfig.local
-
-[includeIf "gitdir:~/Code/autodesk/"]
-	path = ~/.gitconfig.work

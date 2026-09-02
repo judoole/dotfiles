@@ -37,7 +37,7 @@ unlink: ## Remove every symlink this repo created
 	  stow --dir=$(STOW_DIR) --target=$(TARGET) --no-folding --delete $$pkg && echo "unlinked $$pkg"; \
 	done
 
-identity: ## Create ~/.gitconfig.local (and .work) and verify git can use them
+identity: ## Ask for your git name and email, write ~/.gitconfig.local
 	@$(DOTFILES)/scripts/identity.sh $(DOTFILES) --ensure || true
 
 mise: ## Install the runtimes pinned in mise/config.toml

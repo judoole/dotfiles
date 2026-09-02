@@ -1,18 +1,12 @@
-# Copy to ~/.gitconfig.local and fill in. Never commit the real one.
+# Template for ~/.gitconfig.local. `make identity` fills this in by prompting,
+# substituting AUTHORNAME and AUTHOREMAIL. You can also copy it by hand.
 #
-#   make identity        does the copy for you
-#
-# The lines below are COMMENTED ON PURPOSE. Until you uncomment and fill them
-# in, git refuses to commit (user.useConfigOnly in the main .gitconfig) rather
-# than letting a placeholder address reach a real commit.
-#
-# This is your default identity for every repo except those under
-# ~/Code/autodesk/, which are covered by ~/.gitconfig.work.
+# Never commit the filled-in version — this repo is public.
 #
 # Tip: GitHub can hide your real address. With "Keep my email address private"
-# enabled in GitHub settings, use your noreply address here:
-#   email = 55565+judoole@users.noreply.github.com
+# enabled in GitHub settings, enter your noreply address at the prompt, which
+# looks like 12345+username@users.noreply.github.com
 
-# [user]
-# 	name = Your Name
-# 	email = you@example.com
+[user]
+	name = AUTHORNAME
+	email = AUTHOREMAIL

@@ -1,99 +1,75 @@
 #!/usr/bin/env bash
-# Create the machine-local git identity files, and report whether git can
-# actually resolve an identity yet.
+# Set up this machine's git identity by asking for it.
 #
-# Nothing in this repo carries an identity (it is public), so a fresh machine
-# has none until these files are edited. Exits non-zero when unresolved so
-# bootstrap can end on a loud, actionable message instead of a quiet one that
-# scrolls away.
+# Nothing in this repo carries a name or address — it is public. Each machine
+# gets its own ~/.gitconfig.local, so entering the work address on the work
+# machine is the whole of the work setup.
 set -uo pipefail
 
 DOTFILES=${1:?usage: identity.sh DOTFILES_DIR [--ensure|--check]}
 MODE=${2:---ensure}
 
 local_file="$HOME/.gitconfig.local"
-work_file="$HOME/.gitconfig.work"
-work_dir="$HOME/Code/autodesk"
 
-if [[ "$MODE" == "--ensure" ]]; then
-  if [[ -f "$local_file" ]]; then
-    echo "$HOME/.gitconfig.local already exists"
-  else
-    cp "$DOTFILES/git/gitconfig.local.example" "$local_file"
-    echo "created ~/.gitconfig.local from the example"
-  fi
-  # Only worth creating on a machine that actually has work repos.
-  if [[ -d "$work_dir" && ! -f "$work_file" ]]; then
-    cp "$DOTFILES/git/gitconfig.work.example" "$work_file"
-    echo "created ~/.gitconfig.work from the example"
-  fi
-fi
-
-# Resolve the way git will: outside any repo, so the work includeIf is not applied.
 name=$(git -C "$HOME" config user.name  2>/dev/null || true)
 email=$(git -C "$HOME" config user.email 2>/dev/null || true)
 
-state=ok
-[[ -z "$email" || -z "$name" ]] && state=missing
-[[ "$email" == *example.com || "$name" == "Your Name" ]] && state=placeholder
+# A leftover template counts as unconfigured.
+[[ "$name" == AUTHORNAME || "$email" == AUTHOREMAIL ]] && { name=; email=; }
 
-work_state=none
-if [[ -d "$work_dir" ]]; then
-  work_email=$(git config -f "$work_file" user.email 2>/dev/null || true)
-  work_state=ok
-  [[ -z "$work_email" ]] && work_state=missing
-  [[ "$work_email" == *first.last* ]] && work_state=placeholder
+if [[ -n "$name" && -n "$email" ]]; then
+  printf '  \033[32m ok \033[0m git identity: %s <%s>\n' "$name" "$email"
+  exit 0
 fi
 
-if [[ "$state" == ok ]]; then
-  printf '  \033[32m ok \033[0m git identity: %s <%s>\n' "$name" "$email"
-
-  case "$work_state" in
-    none) exit 0 ;;
-    ok)
-      printf '  \033[32m ok \033[0m work identity: <%s>\n' "$work_email"
-      exit 0 ;;
-  esac
-
-  # An unedited ~/.gitconfig.work contributes nothing, so the includeIf falls
-  # through and work repos commit under the PERSONAL address. useConfigOnly
-  # cannot catch this — a valid identity is set, just the wrong one. So this
-  # has to be as loud as a missing identity.
+if [[ "$MODE" == "--check" ]]; then
   printf '\n\033[33m'
   cat <<'MSG'
 ┌───────────────────────────────────────────────────────────────────────┐
-│  ACTION REQUIRED — work repos would commit under your PERSONAL email. │
+│  ACTION REQUIRED — git has no identity on this machine.               │
 │                                                                       │
-│    $EDITOR ~/.gitconfig.work                                          │
+│    make identity                                                      │
 │                                                                       │
-│  ~/Code/autodesk/ exists, but ~/.gitconfig.work has no usable         │
-│  identity, so the includeIf falls through to your personal one.       │
-│  Nothing will stop the commit — only this warning.                    │
-│                                                                       │
-│  Re-check with: make doctor                                           │
+│  Until then git REFUSES to commit rather than authoring as            │
+│  you@<hostname>.local. That refusal is deliberate.                    │
 └───────────────────────────────────────────────────────────────────────┘
 MSG
   printf '\033[0m'
   exit 1
 fi
 
-printf '\n\033[33m'
-cat <<'MSG'
-┌───────────────────────────────────────────────────────────────────────┐
-│  ACTION REQUIRED — git has no usable identity on this machine.        │
-│                                                                       │
-│    $EDITOR ~/.gitconfig.local                                         │
-│                                                                       │
-│  Uncomment the [user] block and fill in your name and email.          │
-│  Until you do, git will REFUSE to commit rather than author as        │
-│  you@<hostname>.local. That refusal is deliberate.                    │
-│                                                                       │
-│  Autodesk machine: also fill in ~/.gitconfig.work, which covers       │
-│  every repo under ~/Code/autodesk/.                                   │
-│                                                                       │
-│  Re-check with: make doctor                                           │
-└───────────────────────────────────────────────────────────────────────┘
-MSG
-printf '\033[0m'
-[[ "$state" == placeholder ]] && echo "  (currently reads: ${name:-?} <${email:-unset}> — that is the example placeholder)"
-exit 1
+# --ensure: ask.
+if [[ ! -t 0 ]]; then
+  echo "No git identity configured, and no terminal to ask on."
+  echo "Run 'make identity' from a terminal, or write $local_file by hand"
+  echo "using the template in $DOTFILES/git/gitconfig.local.example"
+  exit 1
+fi
+
+echo
+echo "This machine has no git identity yet. It is written to ~/.gitconfig.local,"
+echo "which is never committed — enter the work address on a work machine."
+echo
+
+while [[ -z "${in_name:-}" ]]; do
+  read -r -p "  full name: " in_name
+done
+while :; do
+  read -r -p "  email:     " in_email
+  case "$in_email" in
+    *?@?*.?*) break ;;
+    *) echo "         that does not look like an email address, try again" ;;
+  esac
+done
+
+# Built with printf rather than sed over the template: a name can contain
+# characters (/, &, backslashes) that would corrupt a sed replacement.
+{
+  printf "# Written by 'make identity'. Never commit this file.\n"
+  printf '[user]\n\tname = %s\n\temail = %s\n' "$in_name" "$in_email"
+} > "$local_file"
+
+echo
+printf '  \033[32m ok \033[0m wrote %s\n' "${local_file/#$HOME/~}"
+printf '  \033[32m ok \033[0m git identity: %s <%s>\n' \
+  "$(git -C "$HOME" config user.name)" "$(git -C "$HOME" config user.email)"
