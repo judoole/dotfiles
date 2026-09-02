@@ -8,7 +8,8 @@ export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 
 # Where this repo lives. Nothing in the shell config depends on it — it is here
 # purely so `cd $DOTFILES` works. Override in ~/.localrc if you clone elsewhere.
-export DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
+# Under $PROJECTS, so `c dotfiles` reaches it too.
+export DOTFILES="${DOTFILES:-$HOME/Code/dotfiles}"
 export PROJECTS="${PROJECTS:-$HOME/Code}"
 
 export EDITOR="vim"

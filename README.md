@@ -13,8 +13,8 @@ xcode-select --install
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # 3. This repo
-git clone https://github.com/judoole/dotfiles.git ~/.dotfiles
-cd ~/.dotfiles && make bootstrap
+git clone https://github.com/judoole/dotfiles.git ~/Code/dotfiles
+cd ~/Code/dotfiles && make bootstrap
 
 # 4. Open a new shell, then
 make doctor

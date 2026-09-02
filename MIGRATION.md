@@ -34,8 +34,8 @@ install the vendor CLI then (`brew install --cask gcloud-cli`,
 ```bash
 xcode-select --install
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-git clone https://github.com/judoole/dotfiles.git ~/.dotfiles
-cd ~/.dotfiles && make bootstrap
+git clone https://github.com/judoole/dotfiles.git ~/Code/dotfiles
+cd ~/Code/dotfiles && make bootstrap
 ```
 
 `make bootstrap` prompts for your git name and email, and ends by confirming
