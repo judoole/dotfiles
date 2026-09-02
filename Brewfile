@@ -7,8 +7,14 @@
 # machine had 51 installed — which is how a dotfiles repo quietly stops being
 # something you can trust to rebuild a laptop.
 
-# HashiCorp relicensed to BUSL, so their tools were removed from homebrew-core
-# and now live in their own tap.
+# HashiCorp relicensed to BUSL, so vault, consul, nomad, boundary and packer
+# were removed from homebrew-core and now live in their own tap. Most simply
+# fail to install from core, which at least tells you.
+#
+# terraform is the exception and the trap: homebrew-core still carries it,
+# frozen at 1.5.7 (the last pre-BUSL release), so `brew install terraform`
+# succeeds and hands you a 2023 binary. Always use the full
+# hashicorp/tap/<tool> name for anything from HashiCorp.
 tap "hashicorp/tap"
 
 # ------------------------------------------------------------ shell & CLI
@@ -110,7 +116,4 @@ cask "font-jetbrains-mono"
 #   gcloud          brew install --cask gcloud-cli
 #   containers      brew install colima docker docker-compose
 #   orchestration   brew install kubernetes-cli helm
-#   iac             brew install hashicorp/tap/terraform
-#                   (NOT `brew install terraform` — homebrew-core is frozen at
-#                    1.5.7, the last release before the BUSL relicence)
 #   databases       brew install postgresql@16   (or libpq for client only)
