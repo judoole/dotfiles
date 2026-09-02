@@ -19,7 +19,6 @@ them belong in a git repo.
 | `~/.localrc` | Machine-local shell config and secrets, sourced last by `.zshrc`. Does not exist yet; create it if you need one. |
 | `~/.gitconfig.local` | Your git identity. Do **not** copy it — `make identity` prompts for it on each machine. Listed here only so you know it is not versioned. |
 | `~/.codex/.env` | Holds a live API key. |
-| iTerm2 profile | iTerm2 → Settings → Profiles → Other Actions → Save as JSON. |
 
 **Cloud credentials are intentionally not on this list.** Neither AWS nor GCP
 is part of the base setup, because it is not yet clear what this machine will
@@ -52,7 +51,7 @@ the work address. That is the whole difference.
 gh auth login
 ```
 
-Sign in to Codex, Claude, Cursor and Dropbox through their apps.
+Sign in to Codex and Claude through their apps.
 
 ## 4. Regenerates itself — do not copy
 

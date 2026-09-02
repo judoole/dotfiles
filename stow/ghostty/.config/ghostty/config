@@ -5,8 +5,10 @@
 #   ghostty +show-config    what is actually in effect
 
 # --- font -------------------------------------------------------------------
-# Installed by the Brewfile (cask font-jetbrains-mono).
-font-family = JetBrains Mono
+# No font is installed by the Brewfile, so Ghostty uses its built-in default
+# (SF Mono on macOS), which is a good monospace. To use another, install it
+# and name it here — `ghostty +list-fonts` shows what is available.
+# font-family = JetBrains Mono
 font-size = 13
 
 # --- appearance -------------------------------------------------------------

@@ -60,41 +60,19 @@ brew "shellcheck"
 brew "adr-tools"
 brew "pngquant"
 brew "oath-toolkit"     # oathtool — TOTP codes
-brew "vercel"
 
 # ------------------------------------------------------------------ casks
-# Two terminals on purpose: try ghostty on the new machine and drop whichever
-# loses. Ghostty's config is a plain file this repo can own; iTerm2's is a
-# plist that does not version.
+# Config lives in stow/ghostty — a plain file, unlike iTerm2's plist.
 cask "ghostty"
-cask "iterm2"
 cask "visual-studio-code"
-cask "cursor"
-cask "intellij-idea-ce"
 cask "claude"
 cask "claude-code"
 
-cask "ngrok"
-
 cask "google-chrome"
-cask "firefox"
 cask "slack"
 cask "spotify"
 cask "whatsapp"
 cask "zoom"
-cask "dropbox"
-cask "keybase"
-
-cask "alfred"
-cask "divvy"
-cask "itsycal"
-cask "the-unarchiver"
-
-cask "postman"
-cask "beekeeper-studio"
-cask "github"
-
-cask "font-jetbrains-mono"
 
 # --------------------------------------------------------------------------
 # Deliberately NOT carried over from the old machine:
@@ -110,6 +88,16 @@ cask "font-jetbrains-mono"
 #                                           add back if you miss them
 #   black, flake8                           better as per-project uv deps than
 #                                           global installs (consider ruff)
+#
+# Apps dropped at the machine move rather than carried over out of habit:
+#
+#   iterm2                                  replaced by ghostty
+#   cursor, intellij-idea-ce                vscode is the editor
+#   firefox, alfred, divvy, itsycal         unused
+#   postman, beekeeper-studio, github       unused
+#   dropbox, keybase, the-unarchiver        unused
+#   ngrok, vercel                           unused
+#   font-jetbrains-mono                     ghostty's default font is fine
 #
 # Left out until the new machine's work is known. Add back when needed:
 #

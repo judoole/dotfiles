@@ -116,10 +116,8 @@ git config user.email you@example.com
 is never versioned. See MIGRATION.md.
 
 **The terminal is versioned, the editor is not.** Ghostty keeps its config in
-a plain file, so it drops into `stow/` like anything else. iTerm2 stores
-settings in a plist that does not diff or merge, which is why terminal config
-was previously out of scope. Both are in the `Brewfile` — try Ghostty on the
-new machine and drop whichever loses.
+a plain file, so it drops into `stow/` like anything else — iTerm2's plist did
+not diff or merge, which is why terminal config used to be out of scope.
 
 Note `macos-option-as-alt = true` in the Ghostty config: without it macOS
 eats the Option key to type `å`/`∂`/`ƒ` and the alt-word keybindings in
@@ -127,6 +125,5 @@ eats the Option key to type `å`/`∂`/`ƒ` and the alt-word keybindings in
 sequences iTerm2, Ghostty, WezTerm and kitty each send, so word movement
 works whichever you settle on.
 
-**Out of scope on purpose:** macOS `defaults` scripting and VS Code / Cursor
-settings. The old repo referenced a `macos/set-defaults.sh`
+**Out of scope on purpose:** macOS `defaults` scripting and editor settings. The old repo referenced a `macos/set-defaults.sh`
 that did not exist, which is the kind of rot this rewrite is meant to avoid.
