@@ -1,88 +1,129 @@
-# holman does dotfiles
+# dotfiles
 
-Your dotfiles are how you personalize your system. These are mine.
+macOS development environment as a repo. Plain files, GNU stow for symlinks,
+a Makefile as the only interface. No framework to learn.
 
-I was a little tired of having long alias files and everything strewn about
-(which is extremely common on other dotfiles projects, too). That led to this
-project being much more topic-centric. I realized I could split a lot of things
-up into the main areas I used (Ruby, git, system libraries, and so on), so I
-structured the project accordingly.
+## Fresh Mac, from zero
 
-If you're interested in the philosophy behind why projects like these are
-awesome, you might want to [read my post on the
-subject](http://zachholman.com/2010/08/dotfiles-are-meant-to-be-forked/).
+```bash
+# 1. Xcode command line tools (gives you git)
+xcode-select --install
 
-## topical
+# 2. Homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-Everything's built around topic areas. If you're adding a new area to your
-forked dotfiles — say, "Java" — you can simply add a `java` directory and put
-files in there. Anything with an extension of `.zsh` will get automatically
-included into your shell. Anything with an extension of `.symlink` will get
-symlinked without extension into `$HOME` when you run `script/bootstrap`.
+# 3. This repo
+git clone https://github.com/judoole/dotfiles.git ~/Code/dotfiles
+cd ~/Code/dotfiles && make bootstrap
 
-## what's inside
-
-A lot of stuff. Seriously, a lot of stuff. Check them out in the file browser
-above and see what components may mesh up with you.
-[Fork it](https://github.com/holman/dotfiles/fork), remove what you don't
-use, and build on what you do use.
-
-## components
-
-There's a few special files in the hierarchy.
-
-- **bin/**: Anything in `bin/` will get added to your `$PATH` and be made
-  available everywhere.
-- **Brewfile**: This is a list of applications for [Homebrew Cask](https://caskroom.github.io) to install: things like Chrome and 1Password and Adium and stuff. Might want to edit this file before running any initial setup.
-- **topic/\*.zsh**: Any files ending in `.zsh` get loaded into your
-  environment.
-- **topic/path.zsh**: Any file named `path.zsh` is loaded first and is
-  expected to setup `$PATH` or similar.
-- **topic/completion.zsh**: Any file named `completion.zsh` is loaded
-  last and is expected to setup autocomplete.
-- **topic/install.sh**: Any file named `install.sh` is executed when you run `script/install`. To avoid being loaded automatically, its extension is `.sh`, not `.zsh`.
-- **topic/\*.symlink**: Any file ending in `*.symlink` gets symlinked into
-  your `$HOME`. This is so you can keep all of those versioned in your dotfiles
-  but still keep those autoloaded files in your home directory. These get
-  symlinked in when you run `script/bootstrap`.
-
-## install
-
-Run this:
-
-```sh
-git clone https://github.com/holman/dotfiles.git ~/.dotfiles
-cd ~/.dotfiles
-script/bootstrap
+# 4. Open a new shell, then
+make doctor
 ```
 
-This will symlink the appropriate files in `.dotfiles` to your home directory.
-Everything is configured and tweaked within `~/.dotfiles`.
+Then work through [MIGRATION.md](MIGRATION.md) for the things a repo should
+not carry: SSH keys, GPG keys, and re-authentication.
 
-The main file you'll want to change right off the bat is `zsh/zshrc.symlink`,
-which sets up a few paths that'll be different on your particular machine.
+## Targets
 
-`dot` is a simple script that installs some dependencies, sets sane macOS
-defaults, and so on. Tweak this script, and occasionally run `dot` from
-time to time to keep your environment fresh and up-to-date. You can find
-this script in `bin/`.
+| Command | Does |
+|---|---|
+| `make` | List targets |
+| `make bootstrap` | brew → link → mise → ai. The whole setup. |
+| `make brew` | Install everything in the `Brewfile` |
+| `make link` | Symlink `stow/*` into `$HOME` (backs up anything in the way) |
+| `make identity` | Create the git identity files and verify git can use them |
+| `make unlink` | Remove every symlink this repo created |
+| `make mise` | Install the runtimes pinned in `mise/config.toml` |
+| `make ai` | Link agent skills into Claude / Codex / Cursor |
+| `make doctor` | Verify tools, symlinks, shell health, auth state |
+| `make check` | Are all `Brewfile` entries installed? |
+| `make dump` | Show packages installed but missing from the `Brewfile` |
 
-## bugs
+Everything is idempotent. Run any target as often as you like.
 
-I want this to work for everyone; that means when you clone it down it should
-work for you even though you may not have `rbenv` installed, for example. That
-said, I do use this as *my* dotfiles, so there's a good chance I may break
-something if I forget to make a check for a dependency.
+## Layout
 
-If you're brand-new to the project and run into any blockers, please
-[open an issue](https://github.com/holman/dotfiles/issues) on this repository
-and I'd love to get it fixed for you!
+```
+Brewfile              packages and apps
+stow/                 each subdir is a stow package mirrored into $HOME
+  zsh/                .zshenv, .zshrc, .config/zsh/*.zsh
+  git/                .gitconfig, .config/git/ignore
+  mise/               .config/mise/config.toml
+  starship/           .config/starship.toml
+  ghostty/            .config/ghostty/config
+ai/skills/            canonical agent skills, symlinked into every AI tool
+ai/codex/             Codex preferences (reference only — see the file)
+scripts/              link.sh, link-ai.sh, doctor.sh
+```
 
-## thanks
+`stow` mirrors a package directory into the target, so `stow/zsh/.zshrc`
+becomes `~/.zshrc`. Real dotted filenames are used rather than stow's
+`--dotfiles` renaming, so the mapping stays obvious.
 
-I forked [Ryan Bates](http://github.com/ryanb)' excellent
-[dotfiles](http://github.com/ryanb/dotfiles) for a couple years before the
-weight of my changes and tweaks inspired me to finally roll my own. But Ryan's
-dotfiles were an easy way to get into bash customization, and then to jump ship
-to zsh a bit later. A decent amount of the code in these dotfiles stem or are
-inspired from Ryan's original project.
+## Design notes
+
+**Why stow and not chezmoi or nix.** The one thing that genuinely differs
+between machines is git identity, and that is one prompted file. With no
+divergence left to template, the main reason to reach for a templating layer
+goes away. What is left is ~150 lines you can read in one sitting, and
+`make unlink` reverses all of it.
+
+**One version manager.** `mise` replaces sdkman + nvm + pyenv + rbenv + jenv,
+which previously all loaded shims on every prompt. Per-project `mise.toml`,
+`.tool-versions`, and `.java-version` files still work. `uv` stays for Python
+packaging.
+
+**Explicit shell load order.** `.zshrc` sources a fixed list —
+`path, options, completion, aliases, functions, tools, prompt`. The previous
+setup globbed `$ZSH/**/*.zsh`, which made load order an accident of directory
+naming.
+
+**The shell config does not know where this repo lives.** Nothing sources a
+file from `$DOTFILES`, so the repo can be cloned anywhere.
+
+**Same repo on every machine, work included.** Every machine runs identical
+versioned config. The only per-machine difference is git identity, and
+`make identity` asks for it:
+
+```
+  full name: Ada Lovelace
+  email:     ada@example.com
+```
+
+That writes `~/.gitconfig.local`, which is never versioned. On a work machine
+you enter the work address, and that is the entire work setup — no directory
+conventions, no second config file.
+
+**No name or address is committed to this repo.** It is public, so a versioned
+`[user]` block would mean anyone who cloned it committed as me until they
+noticed.
+
+Two safeguards, because the second catches what the first cannot:
+
+1. `user.useConfigOnly = true` — with no identity configured git **refuses to
+   commit** rather than inventing `judoole@<hostname>.local`.
+2. `make bootstrap` ends with an identity check, and `make doctor` repeats it,
+   so a machine never sits quietly in that state.
+
+If you want a different address for a few repos on a machine, override per
+repo rather than reintroducing global rules:
+
+```bash
+git config user.email you@example.com
+```
+
+**Nothing secret is committed.** `~/.localrc` is sourced last by `.zshrc` and
+is never versioned. See MIGRATION.md.
+
+**The terminal is versioned, the editor is not.** Ghostty keeps its config in
+a plain file, so it drops into `stow/` like anything else — iTerm2's plist did
+not diff or merge, which is why terminal config used to be out of scope.
+
+Note `macos-option-as-alt = true` in the Ghostty config: without it macOS
+eats the Option key to type `å`/`∂`/`ƒ` and the alt-word keybindings in
+`.config/zsh/options.zsh` never fire. Those bindings cover the escape
+sequences iTerm2, Ghostty, WezTerm and kitty each send, so word movement
+works whichever you settle on.
+
+**Out of scope on purpose:** macOS `defaults` scripting and editor settings. The old repo referenced a `macos/set-defaults.sh`
+that did not exist, which is the kind of rot this rewrite is meant to avoid.

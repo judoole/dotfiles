@@ -1,0 +1,38 @@
+# Ghostty. Plain text, so unlike iTerm2's plist this lives in the repo.
+#
+#   ghostty +list-themes    browse themes
+#   ghostty +list-fonts     browse fonts
+#   ghostty +show-config    what is actually in effect
+
+# --- font -------------------------------------------------------------------
+# No font is installed by the Brewfile, so Ghostty uses its built-in default
+# (SF Mono on macOS), which is a good monospace. To use another, install it
+# and name it here — `ghostty +list-fonts` shows what is available.
+# font-family = JetBrains Mono
+font-size = 13
+
+# --- appearance -------------------------------------------------------------
+# Follows the system light/dark setting.
+theme = light:catppuccin-latte,dark:catppuccin-mocha
+
+window-padding-x = 10
+window-padding-y = 8
+cursor-style = bar
+
+# --- behaviour --------------------------------------------------------------
+# REQUIRED for the alt-word bindings in .config/zsh/options.zsh. Without it
+# macOS swallows Option to type typographic characters (å, ∂, ƒ) and the
+# terminal never sees an Alt key at all.
+macos-option-as-alt = true
+
+# Bytes, not lines. 50MB is generous but cheap.
+scrollback-limit = 50000000
+
+shell-integration = zsh
+copy-on-select = clipboard
+
+# Start fresh rather than restoring last session's windows.
+window-save-state = never
+
+# No "are you sure" when closing a pane with nothing running in it.
+confirm-close-surface = false

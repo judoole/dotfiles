@@ -1,0 +1,93 @@
+# No identity here on purpose: this repo is public, and a versioned [user]
+# block means anyone who clones it commits as me until they notice.
+#
+# useConfigOnly makes git REFUSE to commit when no identity is configured,
+# instead of silently inventing judoole@<hostname>.local. That turns a
+# forgotten setup step into an immediate, obvious error.
+[user]
+	useConfigOnly = true
+
+[init]
+	defaultBranch = main
+
+[core]
+	excludesfile = ~/.config/git/ignore
+	editor = vim
+	pager = delta
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true
+	line-numbers = true
+	hyperlinks = true
+
+[diff]
+	algorithm = histogram
+	colorMoved = default
+	renames = true
+
+[merge]
+	conflictstyle = zdiff3
+	tool = vimdiff
+[mergetool]
+	keepBackup = false
+[difftool]
+	prompt = false
+
+[push]
+	default = simple
+	autoSetupRemote = true
+	followTags = true
+[pull]
+	ff = only
+[fetch]
+	prune = true
+	pruneTags = true
+
+[rebase]
+	autosquash = true
+	autostash = true
+[rerere]
+	enabled = true
+	autoupdate = true
+
+[branch]
+	sort = -committerdate
+[tag]
+	sort = -version:refname
+[column]
+	ui = auto
+
+[help]
+	autocorrect = 1
+[credential]
+	helper = osxkeychain
+[color]
+	ui = true
+
+[alias]
+	co = checkout
+	sw = switch
+	st = status -sb
+	count = !git shortlog -sn
+	last = log -1 HEAD --stat
+	unstage = restore --staged
+	amend = commit --amend --no-edit
+	graph = log --graph --oneline --decorate --all
+	# Branches you have merged and can safely delete.
+	gone = "!git fetch -p && git branch -vv | awk '/: gone]/{print $1}'"
+
+# --- identity ---------------------------------------------------------------
+# Your identity lives in ~/.gitconfig.local, which is created per machine by
+# `make identity` and is never versioned. This repo is public and carries no
+# name or address at all.
+#
+# On a work machine, enter the work address at the prompt. If you later want a
+# personal address for some repos on that machine, override per repo with:
+#
+#   git config user.email you@example.com
+#
+[include]
+	path = ~/.gitconfig.local
