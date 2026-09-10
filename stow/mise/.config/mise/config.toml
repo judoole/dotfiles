@@ -14,6 +14,9 @@ java   = ["temurin-21", "temurin-17"]
 maven  = "latest"
 gradle = "latest"
 node   = "lts"
+# pnpm as a mise tool rather than via corepack: corepack pins the package
+# manager per project and is opt-in, so there is no pnpm outside a repo.
+pnpm   = "latest"
 # uv manages per-project Python envs; this is just the interpreter for
 # one-off scripts and `python3` outside a project.
 python = "3.12"
