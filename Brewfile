@@ -42,7 +42,7 @@ brew "lazygit"          # terminal git UI
 brew "gnupg"            # commit signing
 
 # --------------------------------------------------------------- runtimes
-# java / node / python / ruby / maven / gradle are all managed by mise.
+# java / node / pnpm / python / ruby / maven / gradle are all managed by mise.
 # See stow/mise/.config/mise/config.toml.
 brew "mise"
 brew "uv"               # Python packaging and venvs
@@ -81,7 +81,8 @@ cask "zoom"
 #   google-cloud-sdk                        renamed to the gcloud-cli cask
 #   temurin@17                              mise installs JDKs now
 #   pyenv, rbenv, virtualenv, nvm, sdkman   all replaced by mise
-#   node, yarn                              mise installs node; corepack gives yarn
+#   node, yarn                              mise installs node and pnpm;
+#                                           corepack gives yarn
 #   ack                                     replaced by ripgrep
 #   libgit2, spaceman-diff, mvnvm, roundup  unused in years of shell history
 #   minikube, jupyterlab, spark, tcl-tk     installed but absent from recent use;
