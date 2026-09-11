@@ -31,6 +31,10 @@ setopt NO_BG_NICE                # don't deprioritise background jobs
 #   IGNORE_EOF        - ctrl-D should close the shell
 
 # --- keybindings -----------------------------------------------------------
+# zsh silently switches to vi keybindings if $EDITOR/$VISUAL contain "vi" —
+# which "vim" does. Force emacs mode explicitly so Ctrl+A/E etc. keep working.
+bindkey -e
+
 # Up/Down search history for what you have already typed. Kept from the old
 # config because you clearly use it; atuin is configured not to steal these.
 autoload -U up-line-or-beginning-search down-line-or-beginning-search
