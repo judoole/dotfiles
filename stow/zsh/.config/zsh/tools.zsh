@@ -28,6 +28,9 @@ fi
 # gh completions
 (( $+commands[gh] )) && eval "$(gh completion -s zsh)"
 
+# pnpm completions
+(( $+commands[pnpm] )) && eval "$(pnpm completion zsh)"
+
 # Cloud CLIs are deliberately not wired in here. If this machine ends up doing
 # GCP or AWS work, add the vendor's shell init to ~/.localrc (or a new module
 # listed in .zshrc) rather than making it part of the base setup.
