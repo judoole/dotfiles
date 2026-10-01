@@ -27,6 +27,8 @@ fi
 
 # gh completions
 (( $+commands[gh] )) && eval "$(gh completion -s zsh)"
+# GitHub Packages auth for @spacemakerai; reuses the gh login instead of a stored PAT
+(( $+commands[gh] )) && export NPM_TOKEN="$(gh auth token 2>/dev/null)"
 
 # pnpm completions
 (( $+commands[pnpm] )) && eval "$(pnpm completion zsh)"
