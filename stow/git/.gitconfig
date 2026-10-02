@@ -76,6 +76,8 @@
 	unstage = restore --staged
 	amend = commit --amend --no-edit
 	graph = log --graph --oneline --decorate --all
+	# Pull, then list the commits that just arrived.
+	up = "!f() { old=$(git rev-parse HEAD) && git pull \"$@\" && git log --color --oneline --abbrev-commit \"$old..HEAD\"; }; f"
 	# Branches you have merged and can safely delete.
 	gone = "!git fetch -p && git branch -vv | awk '/: gone]/{print $1}'"
 
