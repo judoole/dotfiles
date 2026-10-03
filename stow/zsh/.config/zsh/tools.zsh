@@ -6,11 +6,14 @@
 # of shims on every prompt.
 (( $+commands[mise] )) && eval "$(mise activate zsh)"
 
+_has_tty=0
+[[ -t 0 && -t 1 ]] && _has_tty=1
+
 # zoxide: `z <fuzzy dir>` jumps to frecent directories.
 (( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
 
 # fzf: ctrl-T files, ctrl-R history, alt-C cd.
-if (( $+commands[fzf] )); then
+if (( _has_tty && $+commands[fzf] )); then
   if fzf --zsh >/dev/null 2>&1; then
     eval "$(fzf --zsh)"                        # fzf >= 0.48
   else
@@ -23,15 +26,16 @@ fi
 
 # atuin: searchable shell history on ctrl-R.
 # --disable-up-arrow keeps the up/down prefix-search bindings in options.zsh.
-(( $+commands[atuin] )) && eval "$(atuin init zsh --disable-up-arrow)"
+(( _has_tty && $+commands[atuin] )) && eval "$(atuin init zsh --disable-up-arrow)"
 
 # gh completions
-(( $+commands[gh] )) && eval "$(gh completion -s zsh)"
+(( _has_tty && $+commands[gh] )) && eval "$(gh completion -s zsh)"
 # GitHub Packages auth for @spacemakerai; reuses the gh login instead of a stored PAT
 (( $+commands[gh] )) && export NPM_TOKEN="$(gh auth token 2>/dev/null)"
 
 # pnpm completions
-(( $+commands[pnpm] )) && eval "$(pnpm completion zsh)"
+(( _has_tty && $+commands[pnpm] )) && eval "$(pnpm completion zsh)"
+unset _has_tty
 
 # Cloud CLIs are deliberately not wired in here. If this machine ends up doing
 # GCP or AWS work, add the vendor's shell init to ~/.localrc (or a new module

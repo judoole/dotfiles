@@ -18,4 +18,6 @@ done
 unset _f
 
 # Machine-local and secret config. Never versioned; see MIGRATION.md.
-[[ -r "$HOME/.localrc" ]] && source "$HOME/.localrc"
+if [[ -r "$HOME/.localrc" ]]; then
+  source "$HOME/.localrc"
+fi

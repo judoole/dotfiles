@@ -67,7 +67,7 @@ fi
 echo
 echo 'runtimes'
 if command -v mise >/dev/null; then
-  if mise doctor >/dev/null 2>&1; then ok 'mise healthy'; else warn 'mise doctor reports problems'; fi
+  if TERM=xterm-256color zsh -i -c 'mise doctor' >/dev/null 2>&1; then ok 'mise healthy'; else warn 'mise doctor reports problems'; fi
 else
   bad 'mise is missing'
 fi

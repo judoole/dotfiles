@@ -1,4 +1,4 @@
-if (( $+commands[starship] )); then
+if (( $+commands[starship] )) && [[ -t 1 && "$TERM" != dumb ]]; then
   eval "$(starship init zsh)"
 else
   # Fallback so a fresh machine still has a usable prompt before `make brew`.

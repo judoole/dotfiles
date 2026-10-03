@@ -65,11 +65,7 @@ brew "oath-toolkit"     # oathtool — TOTP codes
 # Config lives in stow/ghostty — a plain file, unlike iTerm2's plist.
 cask "ghostty"
 cask "visual-studio-code"
-cask "claude"
-cask "claude-code"
 
-cask "google-chrome"
-cask "slack"
 cask "spotify"
 cask "whatsapp"
 cask "zoom"
