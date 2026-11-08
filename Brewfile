@@ -62,8 +62,7 @@ brew "pngquant"
 brew "oath-toolkit"     # oathtool — TOTP codes
 
 # ------------------------------------------------------------------ casks
-# Config lives in stow/ghostty — a plain file, unlike iTerm2's plist.
-cask "ghostty"
+cask "iterm2"
 cask "visual-studio-code"
 cask "claude"
 cask "claude-code"
@@ -92,13 +91,12 @@ cask "zoom"
 #
 # Apps dropped at the machine move rather than carried over out of habit:
 #
-#   iterm2                                  replaced by ghostty
 #   cursor, intellij-idea-ce                vscode is the editor
 #   firefox, alfred, divvy, itsycal         unused
 #   postman, beekeeper-studio, github       unused
 #   dropbox, keybase, the-unarchiver        unused
 #   ngrok, vercel                           unused
-#   font-jetbrains-mono                     ghostty's default font is fine
+#   font-jetbrains-mono                     iTerm2's default font is fine
 #
 # Left out until the new machine's work is known. Add back when needed:
 #

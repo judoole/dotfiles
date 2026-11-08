@@ -50,7 +50,7 @@ stow/                 each subdir is a stow package mirrored into $HOME
   git/                .gitconfig, .config/git/ignore
   mise/               .config/mise/config.toml
   starship/           .config/starship.toml
-  ghostty/            .config/ghostty/config
+  iterm2/             iTerm2 Dynamic Profile (Catppuccin Mocha)
 ai/skills/            canonical agent skills, symlinked into every AI tool
 ai/codex/             Codex preferences (reference only — see the file)
 scripts/              link.sh, link-ai.sh, doctor.sh
@@ -115,15 +115,18 @@ git config user.email you@example.com
 **Nothing secret is committed.** `~/.localrc` is sourced last by `.zshrc` and
 is never versioned. See MIGRATION.md.
 
-**The terminal is versioned, the editor is not.** Ghostty keeps its config in
-a plain file, so it drops into `stow/` like anything else — iTerm2's plist did
-not diff or merge, which is why terminal config used to be out of scope.
+**The terminal colours are versioned, the rest of iTerm2 is not.** iTerm2's
+settings are a plist that does not diff or merge, but it also loads Dynamic
+Profiles: `stow/iterm2` ships a Catppuccin Mocha profile that also sets
+Option to "Esc+". Without that macOS eats Option to type `å`/`∂`/`ƒ` and the
+alt-word bindings in `.config/zsh/options.zsh` never fire.
 
-Note `macos-option-as-alt = true` in the Ghostty config: without it macOS
-eats the Option key to type `å`/`∂`/`ƒ` and the alt-word keybindings in
-`.config/zsh/options.zsh` never fire. Those bindings cover the escape
-sequences iTerm2, Ghostty, WezTerm and kitty each send, so word movement
-works whichever you settle on.
+Two global prefs live outside any profile; set them once:
+
+```sh
+defaults write com.googlecode.iterm2 "Default Bookmark Guid" 6f0c2a1e-5b7d-4c1a-9a53-d07f11e5c0de
+defaults write com.googlecode.iterm2 TabStyleWithAutomaticOption -int 5   # dark chrome
+```
 
 **Out of scope on purpose:** macOS `defaults` scripting and editor settings. The old repo referenced a `macos/set-defaults.sh`
 that did not exist, which is the kind of rot this rewrite is meant to avoid.

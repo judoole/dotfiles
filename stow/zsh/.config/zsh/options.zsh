@@ -46,7 +46,7 @@ bindkey '^[[B' down-line-or-beginning-search
 # Alt/ctrl + arrow for word movement. Terminals disagree on what they send,
 # so bind every common encoding rather than tying the config to one terminal:
 #   \e\e[D    iTerm2 with Option set to "Esc+"
-#   \e[1;3D   Ghostty, WezTerm, kitty (alt)
+#   \e[1;3D   WezTerm, kitty (alt)
 #   \e[1;5D   ctrl+arrow
 bindkey '^[^[[D'  backward-word
 bindkey '^[^[[C'  forward-word
